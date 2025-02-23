@@ -1,0 +1,52 @@
+@import url('https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Mulish', sans-serif;
+}
+
+:root {
+  --background: #f5f5f9;
+  --foreground: #141518;
+
+  --card: #ecedf4;
+  --card-foreground: #141518;
+
+  --popover: #17171a;
+  --popover-foreground: #f5f5f9;
+
+  --primary: #ffd700;
+  --primary-foreground: #ffffff;
+
+  --primary-light: #ffe266;
+  --primary-light-foreground: #ffffff;
+
+  --secondary: #d8d9e6;
+  --secondary-foreground: #f5f5f9;
+
+  --muted: #d8d9e6;
+  --muted-foreground: #94a3b8;
+
+  --accent: #94a3b8;
+  --accent-foreground: #f5f5f9;
+
+  --destructive: #ef4444;
+  --destructive-foreground: #fff;
+
+  --warning: #eab308;
+  --warning-foreground: #000;
+
+  --success: #16a34a;
+  --success-foreground: #fff;
+
+  --border: #1a1a1f;
+  --input: #1a1a1f;
+  --ring: #d1d5db;
+}
+
+.paragraph-mug {
+  display: ruby !important;
+}
