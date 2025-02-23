@@ -40,7 +40,7 @@ export const getFilteredStatsController = async (req: Request, res: Response) =>
     const streaks = await getStreaksRepository();
     const users = await getAllUsersRepository();
 
-    const { email, newsletter_id, start_date, end_date, streak_status, last_opened } = req.query;
+    const { email, newsletter_id, start_date, end_date, streak_status } = req.query;
 
     let filtered_users = users;
 
