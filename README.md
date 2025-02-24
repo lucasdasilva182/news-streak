@@ -8,6 +8,26 @@ e status.
 
 ---
 
+## **Para o pessoal da Waffle**
+
+Subi o sistema para que vocês possam efetuar os devidos testes na aplicação através desse [link](https://the-news-streak.vercel.app/).
+Também deixei aqui alguns usuário cadastrados no banco: 
+
+- **Admin (tem acesso a rota /admin)**:  
+  - teste1@exemplo.com  
+  - teste10@exemplo.com 
+ 
+- **Padrão**:  
+  - teste6@exemplo.com  
+  - teste7@exemplo.com 
+
+**Novo Cadastro**
+Caso queiram cadastrar um novo usuário ou atualizar um existente, basta fazer o GET para a seguinte rota:
+   ```bash
+   https://clownfish-app-2uxru.ondigitalocean.app/?email=teste7@exemplo.com&id=post_2025-02-22&utm_source=&utm_medium=&utm_campaign=&utm_channel=
+   ```
+---
+
 ## **Índice**
 
 1. [Stacks Utilizadas](#stacks-utilizadas)
