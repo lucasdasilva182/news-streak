@@ -26,9 +26,4 @@ router.get('/api/admin/ranking', authenticateToken, isAdmin, getTopEngagedUsersC
 
 router.get('/api/admin/stats', authenticateToken, isAdmin, getFilteredStatsController);
 
-router.get('/health', (req: Request, res: Response) => {
-  console.log('Health check');
-  res.status(200).json({ status: 'ok' });
-});
-
 export { router as routes };

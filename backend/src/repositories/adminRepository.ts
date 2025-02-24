@@ -12,6 +12,19 @@ export const getTopEngagedUsersRepository = async () => {
   }
 };
 
+export const getAllUsersRepository = async () => {
+  try {
+    const result = await db.query(`
+    SELECT id, email, current_streak, max_count_streaks, last_opened
+    FROM users;
+  `);
+    return result.rows;
+  } catch (error) {
+    console.error('Erro ao buscar usuário: ', error);
+    throw error;
+  }
+};
+
 export const getActiveUsersRepository = async () => {
   try {
     const result = await db.query(`
