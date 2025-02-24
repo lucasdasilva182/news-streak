@@ -50,3 +50,46 @@ body {
 .paragraph-mug {
   display: ruby !important;
 }
+
+.react-datepicker-wrapper {
+  width: 100%;
+}
+
+.react-datepicker__close-icon::after {
+  background-color: transparent !important;
+  color: var(--foreground) !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+}
+
+.react-datepicker__day--selected:not([aria-disabled='true']):hover,
+.react-datepicker__day--in-selecting-range:not([aria-disabled='true']):hover,
+.react-datepicker__day--in-range:not([aria-disabled='true']):hover,
+.react-datepicker__month-text--selected:not([aria-disabled='true']):hover,
+.react-datepicker__month-text--in-selecting-range:not([aria-disabled='true']):hover,
+.react-datepicker__month-text--in-range:not([aria-disabled='true']):hover,
+.react-datepicker__quarter-text--selected:not([aria-disabled='true']):hover,
+.react-datepicker__quarter-text--in-selecting-range:not([aria-disabled='true']):hover,
+.react-datepicker__quarter-text--in-range:not([aria-disabled='true']):hover,
+.react-datepicker__year-text--selected:not([aria-disabled='true']):hover,
+.react-datepicker__year-text--in-selecting-range:not([aria-disabled='true']):hover,
+.react-datepicker__year-text--in-range:not([aria-disabled='true']):hover {
+  background-color: var(--primary) !important;
+  color: var(--foreground) !important;
+}
+
+.react-datepicker__day--selected,
+.react-datepicker__day--in-selecting-range,
+.react-datepicker__day--in-range,
+.react-datepicker__month-text--selected,
+.react-datepicker__month-text--in-selecting-range,
+.react-datepicker__month-text--in-range,
+.react-datepicker__quarter-text--selected,
+.react-datepicker__quarter-text--in-selecting-range,
+.react-datepicker__quarter-text--in-range,
+.react-datepicker__year-text--selected,
+.react-datepicker__year-text--in-selecting-range,
+.react-datepicker__year-text--in-range {
+  background-color: var(--primary) !important;
+  color: var(--foreground) !important;
+}

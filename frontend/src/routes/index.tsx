@@ -3,6 +3,7 @@ import LoginPage from '../pages/login';
 import { ProtectedRoute } from '../components/protectedRoute';
 import Streaks from '../pages/streaks';
 import { AdminRoute } from '../components/protectedAdminRoute';
+import Admin from '../pages/admin';
 
 export default function AppRoutes() {
   return (
@@ -15,7 +16,7 @@ export default function AppRoutes() {
       </Route>
       <Route element={<ProtectedRoute />}>
         <Route element={<AdminRoute />}>
-          <Route path="/admin" element={<Streaks />} />
+          <Route path="/admin" element={<Admin />} />
         </Route>
       </Route>
     </Routes>

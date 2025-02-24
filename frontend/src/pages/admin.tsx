@@ -1,249 +1,284 @@
-import { useEffect, useState } from 'react';
-import UserService from '../services/UserService';
+import { useEffect, useState, useMemo } from 'react';
+import AdminService from '../services/AdminService';
 import { Header } from '../components/header';
 import Card from '../components/card';
-import { Check, Copy } from 'lucide-react';
 import moment from 'moment';
-import clsx from 'clsx';
-import Calendar from '../components/calendar';
 import { PageLoadSpinner } from '../components/pageLoadSpinner';
 import Button from '../components/button';
+import { Line } from 'react-chartjs-2';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+import { Filter, X } from 'lucide-react';
 
-interface ReadingHistoryItem {
-  date: string;
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+
+interface User {
+  id: string;
+  email: string;
+  current_streak: number;
+  max_count_streaks: number;
+  last_opened: string;
 }
 
 export default function Admin() {
-  const userService = new UserService();
+  const adminService = new AdminService();
 
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [currentStreaks, setCurrentStreaks] = useState<number>(0);
-  const [maxCountStreaks, setMaxCountStreaks] = useState<number>(0);
-  const [badges, setBadges] = useState<number>(0);
-  const [markedDates, setMarkedDates] = useState<string[]>([]);
-  const [readingHistory, setReadingHistory] = useState<ReadingHistoryItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [totalUsers, setTotalUsers] = useState(0);
+  const [avgStreak, setAvgStreak] = useState(0);
+  const [activeUsersLast7Days, setActiveUsersLast7Days] = useState(0);
+  const [topUsers, setTopUsers] = useState<User[]>([]);
+  const [filters, setFilters] = useState({
+    email: '',
+    newsletter_id: '',
+    start_date: null as Date | null,
+    end_date: null as Date | null,
+    streak_status: '',
+  });
 
-  const handleGetStats = async (email: string) => {
+  const fetchGeneralMetrics = async () => {
     try {
-      const response = await userService.getUserStats({ email });
-      setCurrentStreaks(response.data.current_streak);
-      setReadingHistory(response.data.history as ReadingHistoryItem[]);
-      setMaxCountStreaks(response.data.max_count_streaks);
-
-      const markedDates = (response.data.history as ReadingHistoryItem[]).map(
-        (item: ReadingHistoryItem) => {
-          return moment.utc(item.date).format('YYYY-MM-DD');
-        }
-      );
-
-      setMarkedDates(markedDates);
+      const response = await adminService.getGeneralMetrics();
+      setTotalUsers(response.data.total_users);
+      setAvgStreak(response.data.avg_streak);
     } catch (error) {
-      console.log('Erro ao buscar stats. ', error);
-    } finally {
-      setIsLoading(false);
+      console.error('Erro ao buscar métricas gerais:', error);
     }
   };
 
-  const days = ['S', 'T', 'Q', 'Q', 'S', 'S'];
-  const getWeekDay = (index: number) => {
-    return days[index];
-  };
-
-  const getPhrase = () => {
-    if (currentStreaks <= 0) {
-      return 'Que tal dar uma lida no Dênius?';
-    } else if (currentStreaks === 1) {
-      return 'Seu primeiro dia!';
-    } else {
-      return 'Dias consecutivos!';
+  const fetchTopUsers = async () => {
+    try {
+      const response = await adminService.getTopEngagedUsers();
+      setTopUsers(response.data.sorted_users as User[]);
+      setActiveUsersLast7Days(response.data.sorted_users.length);
+    } catch (error) {
+      console.error('Erro ao buscar ranking de usuários:', error);
     }
   };
 
-  const streakDays = new Set(
-    readingHistory.map((item) => {
-      return moment.utc(item.date).isoWeekday();
-    })
-  );
+  const applyFilters = async () => {
+    try {
+      const filtersParams = {
+        email: filters.email,
+        newsletter_id: filters.newsletter_id,
+        start_date: filters.start_date ? moment(filters.start_date).format('YYYY-MM-DD') : '',
+        end_date: filters.end_date ? moment(filters.end_date).format('YYYY-MM-DD') : '',
+        streak_status: filters.streak_status,
+      };
+      const response = await adminService.getFilteredStats(filtersParams);
+      setTopUsers([...(response.data.filtered_users as User[])]);
+    } catch (error) {
+      console.error('Erro ao aplicar filtros:', error);
+    }
+  };
+
+  const clearFilters = () => {
+    setFilters({
+      email: '',
+      newsletter_id: '',
+      start_date: null,
+      end_date: null,
+      streak_status: '',
+    });
+  };
+
+  const isAnyFilterApplied = () => {
+    return (
+      filters.email ||
+      filters.newsletter_id ||
+      filters.start_date ||
+      filters.end_date ||
+      filters.streak_status
+    );
+  };
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      const user = JSON.parse(storedUser);
-      handleGetStats(user.email);
-    }
+    const fetchData = async () => {
+      try {
+        await Promise.all([fetchGeneralMetrics(), fetchTopUsers()]);
+      } catch (error) {
+        console.error('Erro ao buscar dados:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
   }, []);
 
-  useEffect(() => {
-    if (maxCountStreaks >= 6) {
-      setBadges(1);
-    } else if (maxCountStreaks >= 12) {
-      setBadges(2);
-    } else if (maxCountStreaks >= 18) {
-      setBadges(3);
-    }
-  }, [maxCountStreaks]);
+  const chartData = useMemo(() => {
+    return {
+      labels: topUsers.map((user) => user.email),
+      datasets: [
+        {
+          label: 'Streak Atual',
+          data: topUsers.map((user) => user.current_streak),
+          borderColor: '#ffd700',
+          fill: false,
+        },
+        {
+          label: 'Streak Máximo',
+          data: topUsers.map((user) => user.max_count_streaks),
+          borderColor: '#210f0b',
+          fill: false,
+        },
+      ],
+    };
+  }, [topUsers]);
 
   if (isLoading) {
     return <PageLoadSpinner />;
   }
 
   return (
-    <div className=" bg-gray-100">
+    <div className="flex flex-col min-h-screen bg-gray-100">
       <Header />
       <div className="container flex flex-col gap-4">
         <h1 className="text-2xl md:text-3xl font-extrabold text-center md:text-start leading-[120%]">
-          Bem-vindo!
+          Dashboard administrativo
         </h1>
-        <h2 className="text-xl md:text-2xl font-bold text-center md:text-start text-primary ">
-          Acompanhe aqui seu progresso de leitura
-        </h2>
 
-        <div className="flex flex-col lg:grid lg:grid-cols-3 gap-4">
-          <Card className="flex flex-col md:flex-row gap-6 md:col-span-2 items-center justify-around">
-            <div className="flex flex-col gap-6">
-              <div className="flex gap-4">
-                <div className="w-12">
-                  <img
-                    src="/fire.svg"
-                    alt="Icone fogo"
-                    className={`"w-full h-full object-cover object-center " ${
-                      currentStreaks <= 0 ? 'grayscale' : ''
-                    }`}
-                  />
-                </div>
-                <div className="flex flex-col ">
-                  <h3 className="text-2xl md:text-3xl font-extrabold">{currentStreaks}</h3>
-                  <p className="text-accent">{getPhrase()}</p>
-                </div>
-              </div>
-              <div>
-                <div className="flex gap-4 ">
-                  {days.map((_, i) => (
-                    <div className="flex flex-col items-center justify-center" key={i}>
-                      <div
-                        className={clsx(
-                          'h-6 w-6 rounded-full bg-background shadow-xl border border-muted relative ',
-                          streakDays.has(i + 1) ? 'bg-success' : 'bg-background'
-                        )}
-                      >
-                        {streakDays.has(i + 1) && (
-                          <Check
-                            size={16}
-                            strokeWidth={3}
-                            className="absolute text-white top-[4px] left-[3px]"
-                          />
-                        )}
-                      </div>
-                      <p className="font-bold text-accent">{getWeekDay(i)}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-            <div className="flex flex-col  gap-4">
-              <Card className="!bg-background flex flex-col items-center justify-center">
-                <h3 className="text-xl font-extrabold">{badges}</h3>
-                <p className="text-accent text-xs">Badges</p>
-              </Card>
-              <div className="grid grid-cols-2 gap-4">
-                <Card className="!bg-background flex flex-col items-center justify-center">
-                  <h3 className="text-xl font-extrabold">{maxCountStreaks}</h3>
-                  <p className="text-accent text-xs">Recorde pessoal</p>
-                </Card>
-                <Card className="!bg-background flex flex-col items-center justify-center">
-                  <h3 className="text-xl font-extrabold">{readingHistory.length}</h3>
-                  <p className="text-accent text-xs">Artigos lidos</p>
-                </Card>
-              </div>
-            </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Card className=" ">
+            <p className="text-sm text-gray-500">Total de Leitores</p>
+            <p className="text-2xl font-bold">{totalUsers}</p>
           </Card>
-          <Card className="flex flex-col md:col-span-1 col-start-3 gap-2 items-center justify-center">
-            <h3 className="text-xl md:text-2xl font-extrabold">Badges</h3>
-            <p className="text-accent">Conquiste badges para ter o café</p>
-            <div className="flex gap-4">
-              <div className={clsx('w-16', badges === 1 ? '' : 'grayscale')}>
-                <img
-                  src="/badge-1.png"
-                  alt="Badge chaleira"
-                  className="w-full h-full object-cover object-center"
-                />
-              </div>
-              <div className={clsx('w-16', badges === 2 ? '' : 'grayscale')}>
-                <img
-                  src="/badge-2.png"
-                  alt="Badge grãos de café"
-                  className="w-full h-full object-cover object-center"
-                />
-              </div>
-              <div className={clsx('w-16', badges === 3 ? '' : 'grayscale')}>
-                <img
-                  src="/badge-3.png"
-                  alt="Badge xícara"
-                  className="w-full h-full object-cover object-center"
-                />
-              </div>
-            </div>
+          <Card className=" ">
+            <p className="text-sm text-gray-500">Média de Streaks</p>
+            <p className="text-2xl font-bold">{avgStreak.toFixed(2)}</p>
+          </Card>
+          <Card className=" ">
+            <p className="text-sm text-gray-500">Leitores Ativos (Últimos 7 Dias)</p>
+            <p className="text-2xl font-bold">{activeUsersLast7Days}</p>
           </Card>
         </div>
 
-        <div className="flex flex-col gap-4">
-          <h2 className="text-xl md:text-2xl font-bold text-center md:text-start text-primary">
-            Histórico de leituras
-          </h2>
-          <div className="flex flex-col gap-4 justify-center items-center md:grid md:grid-cols-2">
-            <div className="flex flex-col justify-center items-center md:justify-start md:items-start gap-1">
-              <Calendar markedDates={markedDates} />
-              <div className="flex items-start md:items-center">
-                <img
-                  src="/full_streak.png"
-                  alt="Xícara"
-                  className="w-7 h-7 relative -top-1 object-cover object-center"
-                />
-                <p className="text-accent text-sm">
-                  <span>Dias em que você leu estão marcados no calendário</span>
-                </p>
-              </div>
-            </div>
-            <div className="h-full flex flex-col justify-center items-center gap-4 md:justify-start md:items-start">
-              <Card className="!bg-background shadow-lg">
-                <div className="flex flex-col gap-2 ">
-                  <h3 className="text-xl font-extrabold">💡Dica</h3>
-                  <p className="text-accent">
-                    Aproveite para ler um artigo do the news todos os dias, assim você se mantém
-                    informado e ainda ganha badges!
-                  </p>
-                </div>
-              </Card>
+        <div className="flex flex-col items-end md:flex-row w-full gap-4 mt-4">
+          <div className="w-full">
+            <label htmlFor="email-user">E-mail do usuário</label>
 
-              <div className="flex flex-col gap-4">
-                <div>
-                  <h3 className="text-xl md:text-2xl font-extrabold">Compartilhe o the news</h3>
-                  <p className="text-accent text-sm">
-                    Compartilhe seu link de indicação único com seus amigos, colegas e familiares
-                    para acumular indicações.
-                  </p>
-                </div>
-                <div className="bg-white rounded-md border border-neutral-300 p-2 flex items-center gap-2 relative focus-within:border-b-2  placeholder-shown:border-b hover:border-neutral-500 transition-all w-full focus-within:border-b-primary focus-within:rounded-b-none focus-within:hover:border-b-primary text-neutral-black">
-                  <input
-                    disabled
-                    type="text"
-                    value={'https://app.thenewscc.com.br/subscribe'}
-                    placeholder="Insira o seu melhor e-mail aqui..."
-                    className="peer appearance-none flex-1 h-full focus-within:outline-none pointer-events-auto text-neutral-900 disabled:bg-neutral-200 disabled:text-neutral-500 disabled:bg-transparent px-0"
-                  />
-                  <Button
-                    type="button"
-                    onClick={() =>
-                      navigator.clipboard.writeText('https://app.thenewscc.com.br/subscribe')
-                    }
-                  >
-                    <Copy size={16} />
-                  </Button>
-                </div>
-              </div>
-            </div>
+            <input
+              name="email-user"
+              type="text"
+              placeholder="E-mail do usuário"
+              value={filters.email}
+              onChange={(e) => setFilters({ ...filters, email: e.target.value })}
+              className="border px-2 py-1 !h-10 rounded w-full"
+            />
           </div>
+          <div className="w-full">
+            <label htmlFor="id-newsletter">ID da Newsletter</label>
+
+            <input
+              name="id-newsletter"
+              type="text"
+              placeholder="ID da Newsletter"
+              value={filters.newsletter_id}
+              onChange={(e) => setFilters({ ...filters, newsletter_id: e.target.value })}
+              className="border px-2 py-1 !h-10 rounded w-full"
+            />
+          </div>
+          <div className="w-full">
+            <label htmlFor="start-date">Última leitura</label>
+            <DatePicker
+              name="start-date"
+              isClearable
+              selected={filters.start_date}
+              onChange={(date) => setFilters({ ...filters, start_date: date })}
+              dateFormat="dd/MM/yyyy"
+              placeholderText="Data de Início"
+              className="border px-2 py-1 !h-10 rounded w-full"
+            />
+          </div>
+          <div className="w-full">
+            <DatePicker
+              isClearable
+              selected={filters.end_date}
+              onChange={(date) => setFilters({ ...filters, end_date: date })}
+              dateFormat="dd/MM/yyyy"
+              placeholderText="Data de Fim"
+              className="border px-2 py-1 !h-10 rounded w-full"
+            />
+          </div>
+          <div className="w-full">
+            <label htmlFor="status-streak">Status streak</label>
+
+            <select
+              name="status-streak"
+              value={filters.streak_status}
+              onChange={(e) => setFilters({ ...filters, streak_status: e.target.value })}
+              className="border px-2 py-1 !h-10 rounded w-full"
+            >
+              <option value="">Todos os Status</option>
+              <option value="active">Ativo</option>
+              <option value="inactive">Inativo</option>
+            </select>
+          </div>
+
+          {isAnyFilterApplied() && (
+            <Button
+              onClick={clearFilters}
+              className="!h-10 !min-w-fit bg-transparent hover:bg-transparent text-destructive"
+            >
+              <X size={18} />
+            </Button>
+          )}
+          <Button onClick={applyFilters} className="!h-10 !min-w-fit">
+            <Filter size={18} />
+          </Button>
         </div>
+        <div className="flex flex-col  md:grid md:grid-cols-4 w-full gap-4 "></div>
+
+        {topUsers.length == 0 && <h2>Sem dados</h2>}
+
+        {topUsers.length > 0 && (
+          <>
+            <div className="flex flex-col gap-4">
+              <h2 className="text-xl font-bold">Padrões de Engajamento</h2>
+              <Card className="flex flex-col gap-4">
+                <Line key={JSON.stringify(chartData)} data={chartData} />
+              </Card>
+            </div>
+
+            <div className="flex flex-col gap-4">
+              <h2 className="text-xl font-bold">Ranking de Leitores</h2>
+              <div className="overflow-x-auto">
+                <table className="min-w-full bg-white border border-gray-200">
+                  <thead>
+                    <tr>
+                      <th className="py-2 px-4 border-b">E-mail</th>
+                      <th className="py-2 px-4 border-b">Streak Atual</th>
+                      <th className="py-2 px-4 border-b">Máximo Streak</th>
+                      <th className="py-2 px-4 border-b">Última Leitura</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {topUsers.map((user) => (
+                      <tr key={user.id}>
+                        <td className="py-2 px-4 border-b">{user.email}</td>
+                        <td className="py-2 px-4 border-b text-center">{user.current_streak}</td>
+                        <td className="py-2 px-4 border-b text-center">{user.max_count_streaks}</td>
+                        <td className="py-2 px-4 border-b text-center">
+                          {moment.utc(user.last_opened).format('DD/MM/YYYY')}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

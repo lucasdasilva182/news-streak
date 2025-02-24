@@ -191,7 +191,7 @@ export default function Streaks() {
             Histórico de leituras
           </h2>
           <div className="flex flex-col gap-4 justify-center items-center md:grid md:grid-cols-2">
-            <div className="flex flex-col justify-center items-center md:justify-start md:items-start gap-1">
+            <div className="w-full flex flex-col justify-center items-center md:justify-start md:items-start gap-1">
               <Calendar markedDates={markedDates} />
               <div className="flex items-start md:items-center">
                 <img

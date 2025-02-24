@@ -40,7 +40,7 @@ export const getFilteredStatsController = async (req: Request, res: Response) =>
     const streaks = await getStreaksRepository();
     const users = await getAllUsersRepository();
 
-    const { email, newsletter_id, start_date, end_date, streak_status } = req.query;
+    const { email, newsletter_id, start_date, end_date, streak_status, last_opened } = req.query;
 
     let filtered_users = users;
 
@@ -80,9 +80,9 @@ export const getFilteredStatsController = async (req: Request, res: Response) =>
         if (startDateNormalized && endDateNormalized) {
           return userLastOpened.isBetween(startDateNormalized, endDateNormalized, null, '[]');
         } else if (startDateNormalized) {
-          return userLastOpened.isSameOrBefore(startDateNormalized);
+          return userLastOpened.isSame(startDateNormalized);
         } else if (endDateNormalized) {
-          return userLastOpened.isSameOrBefore(endDateNormalized);
+          return userLastOpened.isSame(endDateNormalized);
         }
 
         return true;

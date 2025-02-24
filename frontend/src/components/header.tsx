@@ -21,10 +21,9 @@ export function Header() {
             {user && user.is_admin === 1 && (
               <Link
                 to="/admin"
-                className="text-primary flex gap-1 items-center justify-center border border-primary rounded-md px-2 py-1"
+                className="font-semibold text-sm  hover:bg-primary-light transition-colors text-foreground bg-primary flex gap-1 items-center justify-center border border-primary rounded-md px-2 py-1"
               >
-                <span className="text-foreground text-sm hidden md:flex">Admin</span>{' '}
-                <Settings size={16} />
+                <span className="hidden md:flex">Admin</span> <Settings size={16} />
               </Link>
             )}
             <a className="cursor-pointer" onClick={handleLogout}>
