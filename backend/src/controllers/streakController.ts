@@ -41,19 +41,46 @@ export const addStreakController = async (
 export const updateStreakController = async (user_id: number) => {
   try {
     const datesResult = await getStreakDatesRepository(user_id);
-    let streakCount = datesResult.length ? 1 : 0;
+    console.log(datesResult);
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    let streakCount = 0;
     let previousDate = null;
 
-    for (let row of datesResult) {
-      const currentDate = new Date(row.date);
+    if (!datesResult || datesResult.length === 0) {
+      await updateUserCurrrentStreakRepository(0, user_id);
+      return;
+    }
 
-      if (previousDate) {
-        const diffTime = currentDate.getTime() - previousDate.getTime();
+    datesResult.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+    const lastDate = new Date(datesResult[0].date);
+    lastDate.setHours(0, 0, 0, 0);
+
+    const diffTime = today.getTime() - lastDate.getTime();
+    const diffDays = diffTime / (1000 * 60 * 60 * 24);
+
+    if (diffDays > 1 && lastDate.getDay() !== 0) {
+      await updateUserCurrrentStreakRepository(0, user_id);
+      return;
+    }
+
+    for (let i = 0; i < datesResult.length; i++) {
+      const currentDate = new Date(datesResult[i].date);
+      currentDate.setHours(0, 0, 0, 0);
+
+      if (i === 0) {
+        streakCount++;
+        previousDate = currentDate;
+      } else if (previousDate) {
+        const diffTime = previousDate.getTime() - currentDate.getTime();
         const diffDays = diffTime / (1000 * 60 * 60 * 24);
 
         if (diffDays === 1) {
           streakCount++;
-        } else if (diffDays === 2 && previousDate.getDay() === 6) {
+        } else if (diffDays === 2 && [5, 6].includes(currentDate.getDay())) {
           streakCount++;
         } else {
           break;

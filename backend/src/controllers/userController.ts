@@ -113,11 +113,15 @@ export const getUserStatsController = async (req: Request, res: Response) => {
       return res.status(400).json({ success: false, message: 'E-mail não fornecido.' });
     }
 
-    const user = await getUserByEmailController(email as string);
+    let user = await getUserByEmailController(email as string);
 
     if (!user) {
       return res.status(404).json({ success: false, message: 'Usuário não encontrado.' });
     }
+
+    await updateStreakController(user.id);
+
+    user = await getUserByEmailController(email as string);
 
     const history = await getStreakHistoryController(user.id);
 
