@@ -11,7 +11,7 @@ export const getGeneralMetricsController = async (req: Request, res: Response) =
     const users = await getActiveUsersRepository();
 
     const total_users = users.length;
-    const avg_streak = users.reduce((sum, user) => sum + user.current_streak, 0) / total_users;
+    const avg_streak = users.reduce((sum, user) => sum + user.current_streak, 0) / total_users || 0;
 
     res.status(200).json({ success: true, total_users, avg_streak });
   } catch (error) {
