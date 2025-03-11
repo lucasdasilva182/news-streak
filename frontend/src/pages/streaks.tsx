@@ -22,6 +22,7 @@ export default function Streaks() {
   const [badges, setBadges] = useState<number>(0);
   const [markedDates, setMarkedDates] = useState<string[]>([]);
   const [readingHistory, setReadingHistory] = useState<ReadingHistoryItem[]>([]);
+  const [streakDays, setStreakDays] = useState(new Set<number>());
 
   const handleGetStats = async (email: string) => {
     try {
@@ -44,10 +45,37 @@ export default function Streaks() {
     }
   };
 
-  const days = ['S', 'T', 'Q', 'Q', 'S', 'S'];
-  const getWeekDay = (index: number) => {
-    return days[index];
+  const resetStreakIfMonday = () => {
+    const today = moment();
+    if (today.isoWeekday() === 1) {
+      setStreakDays(new Set());
+      return true;
+    }
+    return false;
   };
+
+  const calculateCurrentWeekStreaks = (markedDates: string[]) => {
+    const today = moment();
+    const startOfWeek = today.clone().startOf('isoWeek');
+    const endOfWeek = today.clone().endOf('isoWeek').subtract(1, 'day');
+
+    const currentWeekDates = markedDates
+      .map((date) => moment(date))
+      .filter(
+        (mDate) => mDate.isBetween(startOfWeek, endOfWeek, null, '[]') && mDate.isoWeekday() !== 7
+      );
+
+    const days = currentWeekDates.map((mDate) => mDate.isoWeekday());
+    setStreakDays(new Set(days));
+  };
+
+  useEffect(() => {
+    if (!resetStreakIfMonday()) {
+      calculateCurrentWeekStreaks(markedDates);
+    }
+  }, [markedDates]);
+
+  const days = ['S', 'T', 'Q', 'Q', 'S', 'S'];
 
   const getPhrase = () => {
     if (currentStreaks <= 0) {
@@ -58,12 +86,6 @@ export default function Streaks() {
       return 'Dias consecutivos!';
     }
   };
-
-  const streakDays = new Set(
-    readingHistory.map((item) => {
-      return moment.utc(item.date).isoWeekday();
-    })
-  );
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
@@ -134,7 +156,7 @@ export default function Streaks() {
                           />
                         )}
                       </div>
-                      <p className="font-bold text-accent">{getWeekDay(i)}</p>
+                      <p className="font-bold text-accent">{days[i]}</p>
                     </div>
                   ))}
                 </div>
