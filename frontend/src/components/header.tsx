@@ -15,7 +15,7 @@ export function Header() {
         <div className="flex flex-wrap justify-between items-center  h-full container">
           <span></span>
           <Link to="/streaks" className="flex items-center">
-            <img src="/thenews.webp" className=" h-6 sm:h-9" alt="The News Logo" />
+            <img src="/news.webp" className=" h-6 sm:h-9" alt="News Logo" />
           </Link>
           <div className="flex items-center gap-4">
             {user && user.is_admin === 1 && (

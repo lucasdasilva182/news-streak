@@ -2,11 +2,11 @@
 
 1. Clone o repositório:
    ```bash
-   git clone https://github.com/lucasdasilva182/the-news-streak.git
+   git clone https://github.com/lucasdasilva182/news-streak.git
    ```
 2. Instale as dependências:
    ```bash
-   cd the-news-streak/backend
+   cd news-streak/backend
    npm install
    ```
 3. Banco de dados Crie um banco de dados Postgresql com a estrutura mostrada em

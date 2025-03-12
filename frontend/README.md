@@ -3,12 +3,12 @@
 1. Clone o repositório:
 
    ```bash
-   git clone https://github.com/lucasdasilva182/the-news-streak.git
+   git clone https://github.com/lucasdasilva182/news-streak.git
    ```
 
 2. Instale as dependências:
    ```bash
-   cd the-news-streak/frontend
+   cd news-streak/frontend
    npm install
    ```
 3. Configure as variáveis de ambiente:

@@ -109,7 +109,7 @@ const Calendar = ({ markedDates }: CalendarMarkedDaysProps) => {
               {day.day}
               {day.isMarked ? (
                 <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2">
-                  <img src="/full_streak.png" alt="Icone The News" className={`"w-6 h-6 "`} />
+                  <img src="/full_streak.webp" alt="Icone News" className={`"w-6 h-6 "`} />
                 </div>
               ) : (
                 ''

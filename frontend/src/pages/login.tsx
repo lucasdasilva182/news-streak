@@ -45,12 +45,12 @@ export default function LoginPage() {
           <div className="w-full flex flex-col justify-start items-center md:items-start mb-8">
             <div className="rounded shadow-md overflow-hidden h-24 w-24 mb-2">
               <img
-                src="/logo-the-news.jpg"
+                src="/logo-the-news.webp"
                 alt="Logo"
                 className="w-full h-full object-cover object-center"
               />
             </div>
-            <p className="font-black text-primary text-4xl">the news</p>
+            <p className="font-black text-primary text-4xl">news</p>
           </div>
           <span className="flex gap-2 items-center text-lg mb-8 justify-center md:justify-normal">
             <Clock className="text-primary" /> sempre às 06:06 da manhã

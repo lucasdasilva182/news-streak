@@ -126,7 +126,7 @@ export default function Streaks() {
               <div className="flex gap-4">
                 <div className="w-12">
                   <img
-                    src="/fire.svg"
+                    src="/fire.webp"
                     alt="Icone fogo"
                     className={`"w-full h-full object-cover object-center " ${
                       currentStreaks <= 0 ? 'grayscale' : ''
@@ -185,21 +185,21 @@ export default function Streaks() {
             <div className="flex gap-4">
               <div className={clsx('w-16', badges === 1 ? '' : 'grayscale')}>
                 <img
-                  src="/badge-1.png"
+                  src="/badge-1.webp"
                   alt="Badge chaleira"
                   className="w-full h-full object-cover object-center"
                 />
               </div>
               <div className={clsx('w-16', badges === 2 ? '' : 'grayscale')}>
                 <img
-                  src="/badge-2.png"
+                  src="/badge-2.webp"
                   alt="Badge grãos de café"
                   className="w-full h-full object-cover object-center"
                 />
               </div>
               <div className={clsx('w-16', badges === 3 ? '' : 'grayscale')}>
                 <img
-                  src="/badge-3.png"
+                  src="/badge-3.webp"
                   alt="Badge xícara"
                   className="w-full h-full object-cover object-center"
                 />
@@ -217,7 +217,7 @@ export default function Streaks() {
               <Calendar markedDates={markedDates} />
               <div className="flex items-start md:items-center">
                 <img
-                  src="/full_streak.png"
+                  src="/full_streak.webp"
                   alt="Xícara"
                   className="w-7 h-7 relative -top-1 object-cover object-center"
                 />
@@ -231,7 +231,7 @@ export default function Streaks() {
                 <div className="flex flex-col gap-2 ">
                   <h3 className="text-xl font-extrabold">💡Dica</h3>
                   <p className="text-accent">
-                    Aproveite para ler um artigo do the news todos os dias, assim você se mantém
+                    Aproveite para ler um artigo do news todos os dias, assim você se mantém
                     informado e ainda ganha badges!
                   </p>
                 </div>
@@ -239,7 +239,7 @@ export default function Streaks() {
 
               <div className="flex flex-col gap-4">
                 <div>
-                  <h3 className="text-xl md:text-2xl font-extrabold">Compartilhe o the news</h3>
+                  <h3 className="text-xl md:text-2xl font-extrabold">Compartilhe o news</h3>
                   <p className="text-accent text-sm">
                     Compartilhe seu link de indicação único com seus amigos, colegas e familiares
                     para acumular indicações.
@@ -249,15 +249,13 @@ export default function Streaks() {
                   <input
                     disabled
                     type="text"
-                    value={'https://app.thenewscc.com.br/subscribe'}
+                    value={'https://streaks-news.vercel.app'}
                     placeholder="Insira o seu melhor e-mail aqui..."
                     className="peer appearance-none flex-1 h-full focus-within:outline-none pointer-events-auto text-neutral-900 disabled:bg-neutral-200 disabled:text-neutral-500 disabled:bg-transparent px-0"
                   />
                   <Button
                     type="button"
-                    onClick={() =>
-                      navigator.clipboard.writeText('https://app.thenewscc.com.br/subscribe')
-                    }
+                    onClick={() => navigator.clipboard.writeText('https://streaks-news.vercel.app')}
                   >
                     <Copy size={16} />
                   </Button>

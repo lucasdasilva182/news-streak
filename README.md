@@ -1,4 +1,4 @@
-# **The News Streaks ☕**
+# **News Streaks ☕**
 
 Este é um projeto Full-stack que permite o login de usuários para acompanhar suas métricas pessoais.
 Se o usuário for um administrador, ele também tem acesso a um painel de análise. A plataforma foi
@@ -10,22 +10,25 @@ e status.
 
 ## **Para o pessoal da Waffle**
 
-Subi o sistema para que vocês possam efetuar os devidos testes na aplicação através desse [link](https://the-news-streak.vercel.app/).
-Também deixei aqui alguns usuário cadastrados no banco: 
+Subi o sistema para que vocês possam efetuar os devidos testes na aplicação através desse
+[link](https://news-streak.vercel.app/). Também deixei aqui alguns usuário cadastrados no banco:
 
-- **Admin (tem acesso a rota /admin)**:  
-  - teste1@exemplo.com  
-  - teste10@exemplo.com 
- 
-- **Padrão**:  
-  - teste6@exemplo.com  
-  - teste7@exemplo.com 
+- **Admin (tem acesso a rota /admin)**:
 
-**Novo Cadastro**
-Caso queiram cadastrar um novo usuário ou atualizar um existente, basta fazer o GET para a seguinte rota:
-   ```bash
-   https://clownfish-app-2uxru.ondigitalocean.app/?email=teste7@exemplo.com&id=post_2025-02-22&utm_source=&utm_medium=&utm_campaign=&utm_channel=
-   ```
+  - teste1@exemplo.com
+  - teste10@exemplo.com
+
+- **Padrão**:
+  - teste6@exemplo.com
+  - teste7@exemplo.com
+
+**Novo Cadastro** Caso queiram cadastrar um novo usuário ou atualizar um existente, basta fazer o
+GET para a seguinte rota:
+
+```bash
+https://clownfish-app-2uxru.ondigitalocean.app/?email=teste7@exemplo.com&id=post_2025-02-22&utm_source=&utm_medium=&utm_campaign=&utm_channel=
+```
+
 ---
 
 ## **Índice**
@@ -183,14 +186,14 @@ Infelizmente não consegui realizar testes automatizados na aplicação.
 
 1. Clone o repositório:
    ```bash
-   git clone https://github.com/lucasdasilva182/the-news-streak.git
+   git clone https://github.com/lucasdasilva182/news-streak.git
    ```
 
 ### **Backend**
 
 2. Instale as dependências:
    ```bash
-   cd the-news-streak/backend
+   cd news-streak/backend
    npm install
    ```
 3. Banco de dados Crie um banco de dados Postgresql com a estrutura mostrada em
@@ -213,7 +216,7 @@ Infelizmente não consegui realizar testes automatizados na aplicação.
 
 7. Instale as dependências:
    ```bash
-   cd the-news-streak/frontend
+   cd news-streak/frontend
    npm install
    ```
 8. Configure as variáveis de ambiente:
