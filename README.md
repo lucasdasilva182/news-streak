@@ -10,7 +10,7 @@ e status.
 
 ## **Demo**
 
-Sistema demo pode ser acessado através do [link](https://news-streak.vercel.app/).
+Sistema demo pode ser acessado através do [link](https://streaks-news.vercel.app/).
 
 Usuário cadastrados no banco para teste:
 
