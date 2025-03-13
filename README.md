@@ -8,10 +8,11 @@ e status.
 
 ---
 
-## **Para o pessoal da Waffle**
+## **Demo**
 
-Subi o sistema para que vocês possam efetuar os devidos testes na aplicação através desse
-[link](https://news-streak.vercel.app/). Também deixei aqui alguns usuário cadastrados no banco:
+Sistema demo pode ser acessado através do [link](https://news-streak.vercel.app/).
+
+Usuário cadastrados no banco para teste:
 
 - **Admin (tem acesso a rota /admin)**:
 
@@ -19,11 +20,14 @@ Subi o sistema para que vocês possam efetuar os devidos testes na aplicação a
   - teste10@exemplo.com
 
 - **Padrão**:
+  - teste2@exemplo.com
+  - teste2@exemplo.com
+  - teste4@exemplo.com
+  - teste5@exemplo.com
   - teste6@exemplo.com
-  - teste7@exemplo.com
 
 **Novo Cadastro** Caso queiram cadastrar um novo usuário ou atualizar um existente, basta fazer o
-GET para a seguinte rota:
+GET alterando os parâmetros para a seguinte rota:
 
 ```bash
 https://clownfish-app-2uxru.ondigitalocean.app/?email=teste7@exemplo.com&id=post_2025-02-22&utm_source=&utm_medium=&utm_campaign=&utm_channel=
@@ -94,84 +98,6 @@ O banco de dados foi projetado para ser simples e eficiente:
 
 ---
 
-## **Desafios Enfrentados**
-
-1. **Webhook e ngrok**:  
-   Um dos grandes desafios foi lidar com a tela de aviso do ngrok no webhook. Para resolver isso,
-   criei um proxy reverso personalizado que adiciona o cabeçalho necessário
-   (`ngrok-skip-browser-warning`) antes de encaminhar as requisições.
-
-2. **Persistência de Estado**:  
-   Outro desafio foi garantir que o estado do usuário persistisse após a atualização da página.
-   Resolvi isso validando o token JWT no backend ao carregar a aplicação.
-3. **Controle de Rotas para Admin** :  
-   Implementar um sistema de controle de rotas para administradores foi um desafio, mas resolvi isso
-   criando middlewares no backend para validar as permissões do usuário em cada rota protegida. No
-   frontend, também desenvolvi um sistema de menus dinâmicos que ajusta automaticamente os links
-   exibidos com base nas permissões do usuário, garantindo que apenas quem tem acesso veja a opção
-   para o Dashboard.
-
-4. **Integração de Gráficos Dinâmicos** :  
-   Tive alguns desafios ao integrar gráficos dinâmicos com o Chart.js, principalmente na
-   renderização em tempo real e no gerenciamento de estado no frontend. Para resolver isso, usei
-   `useMemo` para evitar cálculos desnecessários e implementei algumas verificações para lidar com
-   dados incompletos ou ausentes.
-
----
-
-## **Organização do Projeto**
-
-O projeto foi organizado de forma modular para facilitar a manutenção e escalabilidade:
-
-- **Rotas**: Mapeiam as requisições HTTP para os controllers.
-- **Controllers**: Processam a lógica de negócios e chamam os repositórios.
-- **Repositories**: Interagem diretamente com o banco de dados.
-
-Exemplo de estrutura:
-
-```
-/backend
-	/src
-	  /controllers
-	  /db
-	  /middleware
-	  /repositories
-	  /routes
-	  /types
-	  index.ts
-/frontend
-	src/
-	  /components
-	  /contexts
-	  /pages
-	  /routes
-	  /services
-	  /types
-	  /utils
-	  App.tsx
-```
-
----
-
-## **Escalabilidade**
-
-O sistema foi projetado para ser escalável:
-
-- **Banco de Dados**:  
-  O PostgreSQL pode ser otimizado com sharding ou replicação conforme o crescimento dos dados.
-  Índices foram criados nas colunas mais consultadas.
-
-- **Backend**:  
-  O backend pode ser containerizado com Docker e implantado em serviços como AWS ECS ou Kubernetes.
-
-- **Cache**:  
-  Redis pode ser implementado facilmente para armazenar resultados de consultas frequentes,
-  reduzindo a carga no banco de dados.
-
----
-
-## **Testes Realizados**
-
 Infelizmente não consegui realizar testes automatizados na aplicação.
 
 ---
@@ -182,7 +108,6 @@ Infelizmente não consegui realizar testes automatizados na aplicação.
 
 - Node.js instalado
 - PostgreSQL configurado
-- ngrok instalado (para testes locais de webhook)
 
 1. Clone o repositório:
    ```bash

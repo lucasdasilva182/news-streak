@@ -53,15 +53,15 @@ export default function LoginPage() {
             <p className="font-black text-primary text-4xl">news</p>
           </div>
           <span className="flex gap-2 items-center text-lg mb-8 justify-center md:justify-normal">
-            <Clock className="text-primary" /> sempre às 06:06 da manhã
+            <Clock className="text-primary" /> sempre às 07:07 da manhã
           </span>
 
           <h1 className="text-4xl md:text-5xl font-extrabold text-center md:text-start leading-[120%] mb-4">
-            o maior jornal digital do país ☕
+            o melhor jornal digital do país ☕
           </h1>
 
           <p className="w-full text-center md:text-left text-md sm:text-lg font-regular mb-12 ">
-            tudo que você precisa saber pra começar seu dia bem e informado.
+            tudo que você precisa saber pra começar seu dia mais informado.
           </p>
 
           <form
