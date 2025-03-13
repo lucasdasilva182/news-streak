@@ -1,10 +1,14 @@
 # **News Streaks ☕**
 
-Este é um projeto Full-stack que permite o login de usuários para acompanhar suas métricas pessoais.
-Se o usuário for um administrador, ele também tem acesso a um painel de análise. A plataforma foi
-desenvolvida para monitorar o engajamento de leitores em newsletters, oferecendo insights sobre
-streaks, rankings de usuários e estatísticas detalhadas, com filtros por período, tipo de newsletter
-e status.
+Este é um projeto full-stack que permite aos usuários fazerem login para acompanhar suas métricas
+pessoais de leitura do jornal digital News. Além disso, o sistema inclui uma rota GET para atualizar
+as métricas, que pode ser acionada automaticamente por um webhook ou manualmente pelo próprio
+usuário via clique, por exemplo.
+
+Para os administradores, a plataforma oferece um painel de análise completo, com ferramentas para
+monitorar o engajamento dos leitores. O painel traz informações sobre streaks, rankings de usuários
+e estatísticas, com filtros que permitem visualizar os dados por período, tipo de newsletter e
+status.
 
 ---
 
@@ -21,10 +25,13 @@ Usuário cadastrados no banco para teste:
 
 - **Padrão**:
   - teste2@exemplo.com
-  - teste2@exemplo.com
+  - teste3@exemplo.com
   - teste4@exemplo.com
   - teste5@exemplo.com
   - teste6@exemplo.com
+  - teste7@exemplo.com
+  - teste8@exemplo.com
+  - teste9@exemplo.com
 
 **Novo Cadastro** Caso queiram cadastrar um novo usuário ou atualizar um existente, basta fazer o
 GET alterando os parâmetros para a seguinte rota:
