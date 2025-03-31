@@ -87,6 +87,9 @@ export default function LoginPage() {
                   {isLoading ? <Spinner color="foreground" size="small" /> : 'entrar'}
                 </Button>
               </div>
+              <p className="text-xs text-neutral-900 mt-1">
+                Caso não tenha cadastro, ele será criado automaticamente.
+              </p>
             </div>
             <Button
               className="flex md:hidden w-full max-w-[350px]"

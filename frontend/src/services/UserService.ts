@@ -4,6 +4,10 @@ import BaseService from './BaseService';
 interface GetUserStatsParams {
   email: string;
 }
+interface ConfirmReadingParams {
+  email: string;
+  date: string;
+}
 
 interface UserLogin {
   data: {
@@ -33,5 +37,9 @@ export default class UserService extends BaseService {
 
   public getUserStats(param: GetUserStatsParams): Promise<UserStats> {
     return this.requester.get(`${this.url}/user/stats`, { params: param });
+  }
+
+  public confirmReading(param: ConfirmReadingParams): Promise<UserLogin> {
+    return this.requester.get(`${this.url}/?email=${param.email}&id=${param.date}`);
   }
 }

@@ -25,6 +25,7 @@ export default function Streaks() {
   const [streakDays, setStreakDays] = useState(new Set<number>());
 
   const handleGetStats = async (email: string) => {
+    setIsLoading(true);
     try {
       const response = await userService.getUserStats({ email });
       setCurrentStreaks(response.data.current_streak);
@@ -45,9 +46,24 @@ export default function Streaks() {
     }
   };
 
+  const confirmReading = async () => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      const user = JSON.parse(storedUser);
+      const email = user.email;
+      const date = moment().format('YYYY-MM-DD');
+      try {
+        await userService.confirmReading({ email, date });
+        handleGetStats(email);
+      } catch (error) {
+        console.log('Erro ao confirmar leitura. ', error);
+      }
+    }
+  };
+
   const resetStreakIfMonday = () => {
     const today = moment();
-    if (today.isoWeekday() === 1) {
+    if (today.isoWeekday() === 1 && streakDays.has(2)) {
       setStreakDays(new Set());
       return true;
     }
@@ -70,6 +86,7 @@ export default function Streaks() {
   };
 
   useEffect(() => {
+    // calculateCurrentWeekStreaks(markedDates);
     if (!resetStreakIfMonday()) {
       calculateCurrentWeekStreaks(markedDates);
     }
@@ -79,7 +96,7 @@ export default function Streaks() {
 
   const getPhrase = () => {
     if (currentStreaks <= 0) {
-      return 'Que tal dar uma lida no Dênius?';
+      return 'Que tal dar uma lida no News?';
     } else if (currentStreaks === 1) {
       return 'Seu primeiro dia!';
     } else {
@@ -139,7 +156,7 @@ export default function Streaks() {
                 </div>
               </div>
               <div>
-                <div className="flex gap-4 ">
+                <div className="flex gap-4 justify-center md:justify-start">
                   {days.map((_, i) => (
                     <div className="flex flex-col items-center justify-center" key={i}>
                       <div
@@ -227,6 +244,17 @@ export default function Streaks() {
               </div>
             </div>
             <div className="h-full flex flex-col justify-center items-center gap-4 md:justify-start md:items-start">
+              <div className="flex flex-row justify-between items-start md:items-end w-full gap-6 md:gap-2">
+                <div>
+                  <h3 className="text-xl md:text-2xl font-extrabold">Confirmar leitura</h3>
+                  <p className="text-accent text-sm">
+                    Confirme sua leitura diária para acumular dias e badges.
+                  </p>
+                </div>
+                <Button type="button" onClick={confirmReading}>
+                  <Check size={16} />
+                </Button>
+              </div>
               <Card className="!bg-background shadow-lg">
                 <div className="flex flex-col gap-2 ">
                   <h3 className="text-xl font-extrabold">💡Dica</h3>
