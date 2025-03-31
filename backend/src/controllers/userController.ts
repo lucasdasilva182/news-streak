@@ -81,7 +81,7 @@ export const loginController = async (req: Request, res: Response) => {
     let user = await getUserByEmailController(email);
 
     if (!user) {
-      return res.status(404).json({ success: false, message: 'Usuário não encontrado.' });
+      user = await createUserController(email);
     }
 
     const token = jwt.sign(user, process.env.JWT_SECRET as string, {

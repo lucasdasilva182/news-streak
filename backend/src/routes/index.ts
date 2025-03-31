@@ -13,7 +13,7 @@ import { authenticateToken, isAdmin } from '../middleware/authMiddleware';
 
 const router = express.Router();
 
-router.get('/', saveToDatabaseController);
+router.get('/api', saveToDatabaseController);
 
 router.post('/api/login', loginController);
 
