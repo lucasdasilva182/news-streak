@@ -37,7 +37,7 @@ Usuário cadastrados no banco para teste:
 GET alterando os parâmetros para a seguinte rota:
 
 ```bash
-https://clownfish-app-2uxru.ondigitalocean.app/?email=teste7@exemplo.com&id=post_2025-02-22&utm_source=&utm_medium=&utm_campaign=&utm_channel=
+https://clownfish-app-2uxru.ondigitalocean.app/api?email=teste7@exemplo.com&id=post_2025-02-22&utm_source=&utm_medium=&utm_campaign=&utm_channel=
 ```
 
 ---
